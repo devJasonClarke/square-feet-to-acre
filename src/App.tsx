@@ -34,11 +34,10 @@ const SquareFeetToAcresConverter = () => {
       />
       {/* Remove the button as conversion happens on each input change */}
 
-      {acres !== null && (
-        <div>
-          <strong>Result:</strong> <p className="result">{acres} acres</p>
-        </div>
-      )}
+      <div>
+        <strong>Result:</strong>{" "}
+        <p className="result">{acres ? acres : "0.00"} acres</p>
+      </div>
     </div>
   );
 };
