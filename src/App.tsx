@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 
-const SquareFeetToAcresConverter = () => {
+const SquareFeetToAcresConverter: React.FC = () => {
   // State for square feet input and result
-  const [squareFeet, setSquareFeet] = useState("");
-  const [acres, setAcres] = useState<null | string>(null);
+  const [squareFeet, setSquareFeet] = useState<string>("");
+  const [acres, setAcres] = useState<string | null>(null);
+  const [moneyAmount, setMoneyAmount] = useState<string>("");
 
   // Function to format number with commas and decimal point
-  const formatNumberWithCommas = (number: string) => {
+  const formatNumberWithCommas = (number: string): string => {
     // Remove non-digit characters and add commas for thousands
     const parts = number.split(".");
     const integerPart = parts[0]
@@ -18,14 +19,14 @@ const SquareFeetToAcresConverter = () => {
   };
 
   // Function to handle square feet input change
-  const handleSquareFeetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSquareFeetChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const inputValue = formatNumberWithCommas(e.target.value);
     setSquareFeet(inputValue);
     convertToAcres(inputValue);
   };
 
   // Function to convert square feet to acres
-  const convertToAcres = (inputValue: string) => {
+  const convertToAcres = (inputValue: string): void => {
     const squareFeetValue = parseFloat(inputValue.replace(/,/g, ""));
     if (!isNaN(squareFeetValue)) {
       const acresValue = squareFeetValue / 43560;
@@ -35,35 +36,57 @@ const SquareFeetToAcresConverter = () => {
     }
   };
 
-  function formatTheNumber(number: any) {
-    // Convert the number to a string and split it into integer and decimal parts
-    const parts = number.toString().split(".");
+  // Function to handle the input change
+  const handleMoneyAmountChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    // Update the moneyAmount state with the input value
+    const inputValue = formatNumberWithCommas(e.target.value);
+    setMoneyAmount(inputValue);
+  };
 
-    // Add commas to the integer part
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    // Join the integer and decimal parts back together
-    const formattedNumber = parts.join(".");
-
-    return formattedNumber;
-  }
+  // Function to calculate 20% of the money amount
+  const calculatePercentage = (): string => {
+    // Calculate 20% of the moneyAmount
+    const amount = Number(moneyAmount.replace(/,/g, "")) * 0.2;
+    return formatNumberWithCommas(amount.toFixed(2));
+  };
 
   return (
-    <div className="container">
-      <label htmlFor="squareFeetInput">Square Feet:</label>
-      <input
-        type="text"
-        id="squareFeetInput"
-        value={squareFeet}
-        onChange={handleSquareFeetChange}
-      />
-      {/* Remove the button as conversion happens on each input change */}
+    <div className="mainContainer">
+      <div className="container">
+        <label htmlFor="squareFeetInput">Square Feet:</label>
+        <input
+          type="text"
+          id="squareFeetInput"
+          value={squareFeet}
+          onChange={handleSquareFeetChange}
+        />
 
-      <div>
-        <strong>Result:</strong>{" "}
-        <p className="result">
-          {acres ? formatTheNumber(acres) : "0.00"} acres
-        </p>
+        <div>
+          <strong>Total Acres:</strong>{" "}
+          <p className="result">
+            {acres ? formatNumberWithCommas(acres) : "0.00"} acres
+          </p>
+        </div>
+      </div>
+      <div className="container">
+        <label htmlFor="moneyAmountInput">Money Amount:</label>
+        <input
+          type="text"
+          id="moneyAmountInput"
+          value={Number(moneyAmount.replace(/,/g, "")) > 0 ? moneyAmount : "0"}
+          onChange={handleMoneyAmountChange}
+        />
+
+        <div>
+          <strong>20% of Amount:</strong>{" "}
+          <p className="result">
+            $
+            {Number(moneyAmount.replace(/,/g, "")) > 0
+              ? calculatePercentage()
+              : "0"}{" "}
+            {/* Display the result with 2 decimal places */}
+          </p>
+        </div>
       </div>
     </div>
   );

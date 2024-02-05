@@ -10,7 +10,10 @@ body {
   height: 100vh;
   margin: 0;
 }
-
+.mainContainer {
+  display: flex;
+  gap: 60px;
+}
 .container {
   background-color: #1f1f1f; /* Dark gray container background */
   padding: 20px;
@@ -62,6 +65,6 @@ strong {
   display: block;
 }
 
-.result{
+.result {
   font-size: 50px;
 }
